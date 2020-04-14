@@ -144,7 +144,7 @@ class ServiceNowAdapter extends EventEmitter {
    */
   emitOffline() {
     this.emitStatus('OFFLINE');
-    console.log('ServiceNow: Instance is unavailable.');
+    //log.warn('ServiceNow: Instance is unavailable.');
   }
 
   /**
@@ -196,24 +196,7 @@ class ServiceNowAdapter extends EventEmitter {
                 callbackError = error;
             } else {
                 console.log('Response OK.');
-                //console.log(JSON.parse(data.body))
-                let jsonResults = JSON.parse(data.body);
-                console.log(Object.prototype.toString.call(jsonResults));
-                var returnTickets = new Array()
-                for (var jsonResult of jsonResults.result) {
-                    let changeTicket = {
-                        change_ticket_number: jsonResult.number,
-                        active: jsonResult.active,
-                        priority: jsonResult.priority,
-                        description: jsonResult.description,
-                        work_start: jsonResult.work_start,
-                        work_end: jsonResult.work_end,
-                        change_ticket_key: jsonResult.sys_id
-                    }
-                    console.log(changeTicket)
-                    returnTickets.push(changeTicket)
-                }
-                callbackData = returnTickets
+                callbackData = data;
             }
             return callback(callbackData, callbackError);
         });
@@ -235,31 +218,7 @@ class ServiceNowAdapter extends EventEmitter {
      * Note how the object was instantiated in the constructor().
      * post() takes a callback function.
      */
-        let callbackData = null;
-        let callbackError = null;
-        this.connector.post((data, error) => {
-            if (error) {
-                console.error('Error present.');
-                callbackError = error;
-            } else {
-                console.log('Response OK.');
-                //console.log(JSON.parse(data.body))
-                let jsonResult = JSON.parse(data.body);
-                console.log(Object.prototype.toString.call(jsonResult));
-                let changeTicket = {
-                        change_ticket_number: jsonResult.number,
-                        active: jsonResult.active,
-                        priority: jsonResult.priority,
-                        description: jsonResult.description,
-                        work_start: jsonResult.work_start,
-                        work_end: jsonResult.work_end,
-                        change_ticket_key: jsonResult.sys_id
-                    }
-                console.log(changeTicket);
-                callbackData = changeTicket;
-                } 
-            return callback(callbackData, callbackError);
-        });
+     this.connector.post(callback);
   }
 }
 
